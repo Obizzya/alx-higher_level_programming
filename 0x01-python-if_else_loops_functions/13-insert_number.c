@@ -1,49 +1,38 @@
 #include "lists.h"
 
 /**
- * insert_node - inserts a new node
- * at a given position.
- * @head: head of a list.
- * @number: index of the list where the new node is
- * added.
- * Return: the address of the new node, or NULL if it
- * failed.
+ * insert_node - adds a node in a sorted list
+ *
+ * @head: pointer to the list
+ * @n: data to add
+ *
+ * Return: returns pointer to new node
  */
-listint_t *insert_node(listint_t **head, int number)
+listint_t *insert_node(listint_t **head, int n)
 {
-	listint_t *new;
-	listint_t *h;
-	listint_t *h_prev;
+	listint_t *new, *tmp, *prev;
 
-	h = *head;
-	new = malloc(sizeof(listint_t));
-
-	if (new == NULL)
-		return (NULL);
-
-	while (h != NULL)
+	if (!head)
+		return (0);
+	new = malloc(sizeof(*new));
+	if (!new)
+		return (0);
+	new->n = n;
+	if (!(*head))
 	{
-		if (h->n > number)
-			break;
-		h_prev = h;
-		h = h->next;
-	}
-
-	new->n = number;
-
-	if (*head == NULL)
-	{
-		new->next = NULL;
 		*head = new;
+		return (new);
 	}
-	else
+	tmp = prev = *head;
+	while (tmp && tmp->n < n)
 	{
-		new->next = h;
-		if (h == *head)
-			*head = new;
-		else
-			h_prev->next = new;
+		prev = tmp;
+		tmp = tmp->next;
 	}
-
+	if (prev == tmp)
+		*head = new;
+	else
+		prev->next = new;
+	new->next = tmp;
 	return (new);
 }
