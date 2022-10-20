@@ -1,36 +1,34 @@
 #!/usr/bin/python3
-"""Module for matrix Calculations"""
+"""Defines a matrix division function."""
 
 
 def matrix_divided(matrix, div):
-    '''This function devides all elements of a matrix
-    args:
-        matrix (list): list of lists of integers/floats
-        div (int): integer or float
-    returns:
-        a new matrix
-    '''
-    if type(div) is not int and type(div) is not float:
-        raise TypeError('div must be a number')
-    elif div == 0:
-        raise ZeroDivisionError('division by zero')
+    """Divide all elements of a matrix.
+    Args:
+        matrix (list): A list of lists of ints or floats.
+        div (int/float): The divisor.
+    Raises:
+        TypeError: If the matrix contains non-numbers.
+        TypeError: If the matrix contains rows of different sizes.
+        TypeError: If div is not an int or float.
+        ZeroDivisionError: If div is 0.
+    Returns:
+        A new matrix representing the result of the division.
+    """
+    if (not isinstance(matrix, list) or matrix == [] or
+            not all(isinstance(row, list) for row in matrix) or
+            not all((isinstance(ele, int) or isinstance(ele, float))
+                    for ele in [num for row in matrix for num in row])):
+        raise TypeError("matrix must be a matrix (list of lists) of "
+                        "integers/floats")
 
-    fst_lst_len = len(matrix[0])
-    new_matrix = list()
+    if not all(len(row) == len(matrix[0]) for row in matrix):
+        raise TypeError("Each row of the matrix must have the same size")
 
-    for lst in matrix:
-        if len(lst) != fst_lst_len:
-            raise TypeError('Each row of the matrix must have the same size')
+    if not isinstance(div, int) and not isinstance(div, float):
+        raise TypeError("div must be a number")
 
-        new_list = list()
+    if div == 0:
+        raise ZeroDivisionError("division by zero")
 
-        for e in lst:
-            if type(e) is not int and type(e) is not float:
-                raise TypeError(
-                    'matrix must be a matrix(list of lists) of integers/floats'
-                    )
-            new_list.append(round(e / div, 2))
-
-        new_matrix.append(new_list)
-
-    return new_matrix
+    return ([list(map(lambda x: round(x / div, 2), row)) for row in matrix])
